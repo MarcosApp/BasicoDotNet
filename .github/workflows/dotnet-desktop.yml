@@ -8,8 +8,8 @@ on:
 
 env:
   DOTNET_VERSION: "8.0.x"
-  PROJECT_PATH: "1-Presentation/Bernhoeft.GRT.Api/Bernhoeft.GRT.Api.csproj"
-  TEST_PROJECT_PATH: "0-Tests/Bernhoeft.GRT.Tests/Bernhoeft.GRT.Tests.csproj"
+  PROJECT_PATH: "1-Presentation/Bernhoeft.GRT.Teste.Api/Bernhoeft.GRT.Teste.Api.csproj"
+  TEST_PROJECT_PATH: "0-Tests/Bernhoeft.GRT.Teste.IntegrationTests/Bernhoeft.GRT.Teste.IntegrationTests.csproj"
   PUBLISH_DIR: "publish"
 
 jobs:
