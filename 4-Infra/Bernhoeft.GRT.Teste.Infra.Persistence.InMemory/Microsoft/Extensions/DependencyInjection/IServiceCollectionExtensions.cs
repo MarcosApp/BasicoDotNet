@@ -19,18 +19,12 @@ namespace Microsoft.Extensions.DependencyInjection
                        .UseAsyncSeeding(async (context, _, cancellationToken) =>
                        {
                            var dbSet = context.Set<AvisoEntity>();
+
                            if (!await dbSet.AnyAsync(cancellationToken))
                            {
-                               dbSet.Add(new()
-                               {
-                                   Titulo = "Titulo 1",
-                                   Mensagem = "Mensagem 1",
-                               });
-                               dbSet.Add(new()
-                               {
-                                   Titulo = "Titulo 2",
-                                   Mensagem = "Mensagem 2",
-                               });
+                               dbSet.Add(new AvisoEntity("Titulo 1", "Mensagem 1"));
+                               dbSet.Add(new AvisoEntity("Titulo 2", "Mensagem 2"));
+
                                await context.SaveChangesAsync(cancellationToken);
                            }
                        });

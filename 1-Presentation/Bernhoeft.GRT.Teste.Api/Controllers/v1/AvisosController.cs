@@ -1,4 +1,5 @@
-﻿using Bernhoeft.GRT.Teste.Application.Requests.Queries.v1;
+﻿using Bernhoeft.GRT.Teste.Application.Requests.Commands.v1;
+using Bernhoeft.GRT.Teste.Application.Requests.Queries.v1;
 using Bernhoeft.GRT.Teste.Application.Responses.Queries.v1;
 
 namespace Bernhoeft.GRT.Teste.Api.Controllers.v1
@@ -15,34 +16,49 @@ namespace Bernhoeft.GRT.Teste.Api.Controllers.v1
     [ProducesResponseType(StatusCodes.Status500InternalServerError, Type = null)]
     public class AvisosController : RestApiController
     {
-        ///// <summary>
-        ///// Retorna um Aviso por ID.
-        ///// </summary>
-        ///// <param name="request"></param>
-        ///// <param name="cancellationToken"></param>
-        ///// <returns>Aviso.</returns>
-        ///// <response code="200">Sucesso.</response>
-        ///// <response code="400">Dados Inválidos.</response>
-        ///// <response code="404">Aviso Não Encontrado.</response>
-        //[HttpGet("{id}")]
-        //[ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GetAvisoResponse))]
-        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
-        //[ProducesResponseType(StatusCodes.Status404NotFound)]
-        //[JwtAuthorize(Roles = AuthorizationRoles.CONTRACTLAYOUT_SISTEMA_AVISO_PESQUISAR)]
-        //public async Task<object> GetAviso([FromModel] GetAvisoRequest request, CancellationToken cancellationToken)
-        //    => await Mediator.Send(request, cancellationToken);
+        private readonly IMediator _mediator;
+        public AvisosController(IMediator mediator)
+            => _mediator = mediator;
 
-        /// <summary>
-        /// Retorna Todos os Avisos Cadastrados para Tela de Edição.
-        /// </summary>
-        /// <param name="cancellationToken"></param>
-        /// <returns>Lista com Todos os Avisos.</returns>
-        /// <response code="200">Sucesso.</response>
-        /// <response code="204">Sem Avisos.</response>
-        [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IDocumentationRestResult<IEnumerable<GetAvisosResponse>>))]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<object> GetAvisos(CancellationToken cancellationToken)
-            => await Mediator.Send(new GetAvisosRequest(), cancellationToken);
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(new GetAvisoByIdQuery(id), cancellationToken);
+
+            if (result is null)
+                return NotFound();
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(
+            [FromBody] CreateAvisoCommand command,
+            CancellationToken cancellationToken)
+        {
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(
+            int id,
+            [FromBody] UpdateAvisoMessageCommandValidator command,
+            CancellationToken cancellationToken)
+        {
+            command.Id = id;
+
+            var result = await _mediator.Send(command, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new RemoveAvisoCommand(id), cancellationToken);
+            return NoContent();
+        }
     }
 }

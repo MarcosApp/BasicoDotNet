@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Text.Json.Serialization;
 using Bernhoeft.GRT.Core.Extensions;
 using Bernhoeft.GRT.Teste.Api.Swashbuckle;
+using Bernhoeft.GRT.Teste.Application.Requests.Commands.v1.Validations;
 using Bernhoeft.GRT.Teste.Application.Requests.Queries.v1;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -39,6 +40,10 @@ builder.Services.AddMemoryCache()
                         Duration = 3600,
                         Location = ResponseCacheLocation.Client
                     });
+                })
+                .AddFluentValidation(fv =>
+                {
+                    fv.RegisterValidatorsFromAssembly(typeof(CriarAvisoCommandValidator).Assembly);
                 })
                 .AddJsonOptions(options =>
                 {
@@ -83,13 +88,13 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 // Configurando o MediatR.
-builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<GetAvisosRequest>());
+builder.Services.AddMediatR(options => options.RegisterServicesFromAssemblyContaining<GetAvisoByIdQuery>());
 
 // Adicionar Context de Conexão com Banco de Dados SqlServer GRT.
 builder.Services.AddDbContext();
 
 // Outros Serviços.
-builder.Services.RegisterServicesFromAssemblyContaining<GetAvisosRequest>();
+builder.Services.RegisterServicesFromAssemblyContaining<GetAvisoByIdQuery>();
 
 // Adicionando Fluent Validation.
 ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Stop;
@@ -97,7 +102,7 @@ ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Stop;
 ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("pt-BR");
 builder.Services.AddFluentValidationAutoValidation(options => options.DisableDataAnnotationsValidation = true)
                 .AddFluentValidationClientsideAdapters()
-                .AddValidatorsFromAssemblyContaining<GetAvisosRequest>();
+                .AddValidatorsFromAssemblyContaining<GetAvisoByIdQuery>();
 builder.Services.AddFluentValidationRulesToSwagger();
 
 // Configure Some Options
