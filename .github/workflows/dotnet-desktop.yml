@@ -17,34 +17,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Clone do repo
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Instalar .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # Restore
+      # RESTORE
       - name: Restore dependencies
-        run: dotnet restore $env:PROJECT_PATH
+        run: dotnet restore $PROJECT_PATH
 
-      # Build
+      # BUILD
       - name: Build API
-        run: dotnet build $env:PROJECT_PATH --configuration Release --no-restore
+        run: dotnet build $PROJECT_PATH --configuration Release --no-restore
 
-      # Testes
+      # TESTS
       - name: Run unit tests
-        continue-on-error: false
-        run: dotnet test $env:TEST_PROJECT_PATH --configuration Release --no-build --verbosity normal
+        run: dotnet test $TEST_PROJECT_PATH --configuration Release --no-build --verbosity normal
 
-      # Publish para produção
+      # PUBLISH
       - name: Publish API
-        run: dotnet publish $env:PROJECT_PATH -c Release -o $env:PUBLISH_DIR --no-build
+        run: dotnet publish $PROJECT_PATH -c Release -o $PUBLISH_DIR --no-build
 
-      # Artefato final para deploy (IIS, Docker, Azure etc.)
+      # ARTIFACT
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
