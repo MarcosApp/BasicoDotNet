@@ -1,5 +1,5 @@
 # 🚀 Sistema de Aviso – Clean Architecture + CQRS + MediatR
-
+[![Build](https://github.com/MarcosApp/BasicoDotNet/actions/workflows/dotnet-desktop.yml/badge.svg)](https://github.com/MarcosApp/BasicoDotNet/actions/workflows/dotnet-ci.yml)
 ![C#](https://img.shields.io/badge/.NET-8.0-blue)
 ![Clean Architecture](https://img.shields.io/badge/Architecture-Clean%20Architecture-green)
 ![CQRS](https://img.shields.io/badge/Pattern-CQRS-orange)
