@@ -25,21 +25,21 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      # RESTORE
+      # RESTORE (tem que restaurar para Release)
       - name: Restore dependencies
         run: dotnet restore $PROJECT_PATH
 
-      # BUILD
+      # BUILD (sem --no-restore senão quebra por causa dos diretórios customizados)
       - name: Build API
-        run: dotnet build $PROJECT_PATH --configuration Release --no-restore
+        run: dotnet build $PROJECT_PATH --configuration Release
 
-      # TESTS
+      # TESTS (não usa --no-build porque seus projetos têm paths customizados)
       - name: Run unit tests
-        run: dotnet test $TEST_PROJECT_PATH --configuration Release --no-build --verbosity normal
+        run: dotnet test $TEST_PROJECT_PATH --configuration Release --verbosity normal
 
-      # PUBLISH
+      # PUBLISH (sem --no-build)
       - name: Publish API
-        run: dotnet publish $PROJECT_PATH -c Release -o $PUBLISH_DIR --no-build
+        run: dotnet publish $PROJECT_PATH -c Release -o $PUBLISH_DIR
 
       # ARTIFACT
       - name: Upload build artifacts
